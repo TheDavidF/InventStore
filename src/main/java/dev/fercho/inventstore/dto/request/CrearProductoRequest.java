@@ -21,7 +21,7 @@ public class CrearProductoRequest {
     private String descripcion;
 
     @NotNull(message = "El precio es obligadorio")
-    @PositiveOrZero(message = "El precio no puede ser negativo")
+    @Positive(message = "El precio no puede ser negativo")
     @Digits(integer=8,fraction = 2,message = "El precio debe tener solo 8 enteros y 2 decimales")
     private BigDecimal precio;
 

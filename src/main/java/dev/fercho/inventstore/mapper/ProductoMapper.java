@@ -30,6 +30,7 @@ public class ProductoMapper {
     }
     public ProductoResponse toResponse(Producto producto){
         ProductoResponse productoResponse = new ProductoResponse();
+        productoResponse.setId(producto.getId());
         productoResponse.setCategoriaId(producto.getCategoria().getId());
         productoResponse.setCategoriaNombre(producto.getCategoria().getNombre());
         productoResponse.setDescripcion(producto.getDescripcion());

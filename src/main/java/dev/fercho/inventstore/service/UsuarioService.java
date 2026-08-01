@@ -5,6 +5,7 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.ActualizarUsuarioRequest;
 import dev.fercho.inventstore.exception.CorreoDuplicadoException;
+import dev.fercho.inventstore.model.Producto;
 import dev.fercho.inventstore.model.Usuario;
 import dev.fercho.inventstore.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

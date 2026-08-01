@@ -1,8 +1,10 @@
 package dev.fercho.inventstore.controller;
 
 
+import dev.fercho.inventstore.dto.request.ActualizarProductoRequest;
 import dev.fercho.inventstore.dto.request.CrearProductoRequest;
 import dev.fercho.inventstore.dto.response.ProductoResponse;
+import dev.fercho.inventstore.dto.response.UsuarioResponse;
 import dev.fercho.inventstore.mapper.ProductoMapper;
 import dev.fercho.inventstore.model.Producto;
 import dev.fercho.inventstore.service.ProductoService;
@@ -36,5 +38,11 @@ public class ProductoController {
     public List<ProductoResponse> obtenerProductos(){
         List<Producto> productos = productoService.obtenerProductos();
         return productoMapper.toList(productos);
+    }
+
+    @PutMapping("/{id}")
+    public ProductoResponse actualizarProducto(@PathVariable Long id, @RequestBody ActualizarProductoRequest request){
+        Producto producto = productoService.actualizarProducto(id,request);
+        return productoMapper.toResponse(producto);
     }
 }

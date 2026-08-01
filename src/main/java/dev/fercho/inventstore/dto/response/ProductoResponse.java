@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductoResponse {
 
+    private Long id;
 
     private String nombre;
 

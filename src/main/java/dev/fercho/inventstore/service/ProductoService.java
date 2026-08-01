@@ -1,6 +1,7 @@
 package dev.fercho.inventstore.service;
 
 
+import dev.fercho.inventstore.dto.request.ActualizarProductoRequest;
 import dev.fercho.inventstore.dto.request.CrearProductoRequest;
 import dev.fercho.inventstore.model.Categoria;
 import dev.fercho.inventstore.model.Producto;
@@ -36,5 +37,16 @@ public class ProductoService {
 
     public List<Producto> obtenerProductos(){
         return productoRepository.findAll();
+    }
+
+    public Producto actualizarProducto(Long id, ActualizarProductoRequest request){
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(
+                        ()-> new RuntimeException("No se encontro ningun producto"));
+        producto.setDescripcion(request.getDescripcion());
+        producto.setNombre(request.getNombre());
+        producto.setPrecio(request.getPrecio());
+
+        return productoRepository.save(producto);
     }
 }
