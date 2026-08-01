@@ -1,0 +1,27 @@
+### Build ###
+target/
+build/
+
+### IDE ###
+.idea/
+*.iml
+.vscode/
+
+### Logs ###
+*.log
+
+### OS ###
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+### Env ###
+.env
+.env.*
+
+### Temp ###
+*.tmp
+*.bak
+
+### HELP ###
+HELP.md
