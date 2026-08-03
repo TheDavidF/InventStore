@@ -49,4 +49,10 @@ public class ProductoService {
 
         return productoRepository.save(producto);
     }
+
+    public Producto buscarPorId(Long id){
+        return productoRepository.findById(id)
+                .orElseThrow(
+                        ()-> new RuntimeException("Producto no encontrado"));
+    }
 }

@@ -45,4 +45,11 @@ public class ProductoController {
         Producto producto = productoService.actualizarProducto(id,request);
         return productoMapper.toResponse(producto);
     }
+
+    @GetMapping("/{id}")
+    public ProductoResponse buscarPorId(@PathVariable Long id){
+        Producto producto = productoService.buscarPorId(id);
+
+        return productoMapper.toResponse(producto);
+    }
 }
