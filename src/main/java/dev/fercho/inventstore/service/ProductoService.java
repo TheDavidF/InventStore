@@ -41,9 +41,7 @@ public class ProductoService {
     }
 
     public Producto actualizarProducto(Long id, ActualizarProductoRequest request){
-        Producto producto = productoRepository.findById(id)
-                .orElseThrow(
-                        ()-> new RuntimeException("No se encontro ningun producto"));
+        Producto producto = buscarPorId(id);
         producto.setDescripcion(request.getDescripcion());
         producto.setNombre(request.getNombre());
         producto.setPrecio(request.getPrecio());
