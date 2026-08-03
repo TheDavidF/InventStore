@@ -9,8 +9,6 @@ import dev.fercho.inventstore.mapper.ProductoMapper;
 import dev.fercho.inventstore.model.Producto;
 import dev.fercho.inventstore.service.ProductoService;
 import jakarta.validation.Valid;
-import lombok.Getter;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,6 +48,12 @@ public class ProductoController {
     public ProductoResponse buscarPorId(@PathVariable Long id){
         Producto producto = productoService.buscarPorId(id);
 
+        return productoMapper.toResponse(producto);
+    }
+
+    @PatchMapping("/{id}/desactivar")
+    public ProductoResponse desactivarProducto(@PathVariable Long id){
+        Producto producto = productoService.desactivarProducto(id);
         return productoMapper.toResponse(producto);
     }
 }

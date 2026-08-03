@@ -36,7 +36,7 @@ public class ProductoService {
 
 
     public List<Producto> obtenerProductos(){
-        return productoRepository.findAll();
+        return productoRepository.findAllByActivoTrue();
     }
 
     public Producto actualizarProducto(Long id, ActualizarProductoRequest request){
@@ -54,5 +54,11 @@ public class ProductoService {
         return productoRepository.findById(id)
                 .orElseThrow(
                         ()-> new RuntimeException("Producto no encontrado"));
+    }
+
+    public Producto desactivarProducto(Long id){
+        Producto producto = buscarPorId(id);
+        producto.setActivo(false);
+        return productoRepository.save(producto);
     }
 }
