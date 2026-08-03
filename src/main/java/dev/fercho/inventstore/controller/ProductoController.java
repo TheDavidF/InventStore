@@ -69,4 +69,10 @@ public class ProductoController {
         List<Producto> productos = productoService.obtenerPorCategoria(categoriaId);
         return productoMapper.toList(productos);
     }
+
+    @GetMapping("/buscar")
+    public List<ProductoResponse> buscarProducto(@RequestParam String nombre){
+        List<Producto> productos = productoService.buscarProducto(nombre);
+        return productoMapper.toList(productos);
+    }
 }

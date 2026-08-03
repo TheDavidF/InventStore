@@ -74,4 +74,8 @@ public class ProductoService {
     public List<Producto> obtenerPorCategoria(Long categoriaId){
         return productoRepository.findByActivoTrueAndCategoriaId(categoriaId);
     }
+
+    public List<Producto> buscarProducto(String nombre){
+        return productoRepository.findByNombreContainingIgnoreCaseAndActivoTrue(nombre);
+    }
 }
