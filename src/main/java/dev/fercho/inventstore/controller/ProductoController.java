@@ -56,4 +56,17 @@ public class ProductoController {
         Producto producto = productoService.desactivarProducto(id);
         return productoMapper.toResponse(producto);
     }
+
+    @PatchMapping("/{id}/reactivar")
+    public ProductoResponse reactivarProducto(@PathVariable Long id){
+        Producto producto = productoService.reactivarProducto(id);
+
+        return productoMapper.toResponse(producto);
+    }
+
+    @GetMapping("/categoria/{categoriaId}")
+    public List<ProductoResponse> obtenerPorCategoria(@PathVariable Long categoriaId){
+        List<Producto> productos = productoService.obtenerPorCategoria(categoriaId);
+        return productoMapper.toList(productos);
+    }
 }
