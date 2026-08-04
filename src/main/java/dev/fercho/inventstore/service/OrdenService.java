@@ -134,7 +134,7 @@ public class OrdenService {
     public Orden quitarDetalle(Long id, Long detalleId){
         Orden orden = buscarPorId(id);
         validarOrdenModificable(orden);
-        DetalleOrden detalleOrden = detalleOrdenRepository.findByIdAndOrdenId(id, detalleId)
+        DetalleOrden detalleOrden = detalleOrdenRepository.findByIdAndOrdenId(detalleId, id)
                 .orElseThrow(()-> new RuntimeException("El detalle no pertenece a la orden"));
         orden.setTotal(orden.getTotal().subtract(detalleOrden.getSubtotal()));
         orden.getDetalles().remove(detalleOrden);
@@ -145,7 +145,7 @@ public class OrdenService {
     public Orden actualizarCantidad(Long id, Long detalleId, CambiarCantidadDetalleRequest request){
         Orden orden = buscarPorId(id);
         validarOrdenModificable(orden);
-        DetalleOrden detalleOrden = detalleOrdenRepository.findByIdAndOrdenId(id, detalleId)
+        DetalleOrden detalleOrden = detalleOrdenRepository.findByIdAndOrdenId(detalleId, id)
                 .orElseThrow(()-> new RuntimeException("El detalle no pertenece a la orden"));
         BigDecimal precioUnitario = detalleOrden.getPrecioUnitario();
         BigDecimal nuevoSubtotal = precioUnitario.multiply(BigDecimal.valueOf(request.getCantidad()));
@@ -189,7 +189,7 @@ public class OrdenService {
 
     private void validarOrdenModificable(Orden orden) {
 
-        if (orden.getEstado() != EstadoOrden.CREADA || orden.getEstado() != EstadoOrden.PREPARANDO) {
+        if (orden.getEstado() != EstadoOrden.CREADA && orden.getEstado() != EstadoOrden.PREPARANDO) {
             throw new RuntimeException(
                     "Solo se pueden modificar órdenes en estado CREADA"
             );
