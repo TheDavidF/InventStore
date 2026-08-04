@@ -27,11 +27,11 @@ import java.util.function.LongFunction;
 @Service
 public class OrdenService {
 
-    private OrdenRepository ordenRepository;
-    private UsuarioRepository usuarioRepository;
-    private ProductoRepository productoRepository;
+    private final OrdenRepository ordenRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final ProductoRepository productoRepository;
 
-    private DetalleOrdenRepository detalleOrdenRepository;
+    private final DetalleOrdenRepository detalleOrdenRepository;
 
     public OrdenService(ProductoRepository productoRepository,
                         UsuarioRepository usuarioRepository,
@@ -44,6 +44,7 @@ public class OrdenService {
     }
 
 
+    @Transactional
     public Orden crearOrden(CrearOrdenRequest request){
         Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
                 .orElseThrow(()-> new RuntimeException("No se encontro un usuario"));
@@ -55,14 +56,7 @@ public class OrdenService {
         BigDecimal total = BigDecimal.ZERO;
 
         for (CrearDetalleOrdenRequest detalleRequest: request.getDetalles()) {
-            Producto producto = productoRepository
-                    .findById(detalleRequest.getProductoId())
-                    .orElseThrow(()-> new RuntimeException("Producto no encontrado"));
-            if (!producto.isActivo()) {
-                throw new RuntimeException(
-                        "No se puede agregar un producto inactivo"
-                );
-            }
+            Producto producto = buscarProductoActivo(detalleRequest.getProductoId());
 
             BigDecimal precioUnitario = producto.getPrecio();
             BigDecimal subtotal = precioUnitario.multiply(
@@ -94,6 +88,7 @@ public class OrdenService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<Orden> buscar(EstadoOrden estado, LocalDate fecha, Long usuarioId){
         if(estado != null){
             return ordenRepository.findByEstado(estado);
@@ -114,17 +109,16 @@ public class OrdenService {
         return ordenRepository.findAll();
     }
 
+    @Transactional
     public Orden agregarDetalle(Long id, CrearDetalleOrdenRequest request){
-        Producto producto = productoRepository
-                .findById(request.getProductoId())
-                .orElseThrow(()-> new RuntimeException("Producto no encontrado"));
+        Producto producto = buscarProductoActivo(request.getProductoId());
         BigDecimal precioUnitario = producto.getPrecio();
         BigDecimal subtotal = precioUnitario.multiply(
                 BigDecimal.valueOf(request.getCantidad())
         );
         Orden orden = buscarPorId(id);
+        validarOrdenModificable(orden);
         DetalleOrden detalleOrden = new DetalleOrden();
-        detalleOrden.setOrden(orden);
         detalleOrden.setCantidad(request.getCantidad());
         detalleOrden.setObservacion(request.getObservacion());
         detalleOrden.setPrecioUnitario(precioUnitario);
@@ -136,10 +130,12 @@ public class OrdenService {
     }
 
 
+    @Transactional
     public Orden quitarDetalle(Long id, Long detalleId){
         Orden orden = buscarPorId(id);
-        DetalleOrden detalleOrden = detalleOrdenRepository.findById(detalleId)
-                .orElseThrow(()-> new RuntimeException("Detalle de orden no encontrado"));
+        validarOrdenModificable(orden);
+        DetalleOrden detalleOrden = detalleOrdenRepository.findByIdAndOrdenId(id, detalleId)
+                .orElseThrow(()-> new RuntimeException("El detalle no pertenece a la orden"));
         orden.setTotal(orden.getTotal().subtract(detalleOrden.getSubtotal()));
         orden.getDetalles().remove(detalleOrden);
         return ordenRepository.save(orden);
@@ -148,8 +144,9 @@ public class OrdenService {
     @Transactional
     public Orden actualizarCantidad(Long id, Long detalleId, CambiarCantidadDetalleRequest request){
         Orden orden = buscarPorId(id);
-        DetalleOrden detalleOrden = detalleOrdenRepository.findById(detalleId)
-                .orElseThrow(()-> new RuntimeException("Detalle de orden no encontrado"));
+        validarOrdenModificable(orden);
+        DetalleOrden detalleOrden = detalleOrdenRepository.findByIdAndOrdenId(id, detalleId)
+                .orElseThrow(()-> new RuntimeException("El detalle no pertenece a la orden"));
         BigDecimal precioUnitario = detalleOrden.getPrecioUnitario();
         BigDecimal nuevoSubtotal = precioUnitario.multiply(BigDecimal.valueOf(request.getCantidad()));
         orden.setTotal(orden.getTotal().subtract(detalleOrden.getSubtotal()));
@@ -160,9 +157,42 @@ public class OrdenService {
     }
 
 
+    @Transactional
     public Orden cancelarOrden(Long id){
         Orden orden = buscarPorId(id);
+        if (orden.getEstado() == EstadoOrden.ENTREGADA) {
+            throw new RuntimeException(
+                    "Una orden entregada no puede cancelarse"
+            );
+        }
         orden.setEstado(EstadoOrden.CANCELADA);
         return ordenRepository.save(orden);
+    }
+
+
+    private Producto buscarProductoActivo(Long productoId) {
+
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() ->
+                        new RuntimeException("Producto no encontrado")
+                );
+
+        if (!producto.isActivo()) {
+            throw new RuntimeException(
+                    "No se puede agregar un producto inactivo"
+            );
+        }
+
+        return producto;
+    }
+
+
+    private void validarOrdenModificable(Orden orden) {
+
+        if (orden.getEstado() != EstadoOrden.CREADA || orden.getEstado() != EstadoOrden.PREPARANDO) {
+            throw new RuntimeException(
+                    "Solo se pueden modificar órdenes en estado CREADA"
+            );
+        }
     }
 }

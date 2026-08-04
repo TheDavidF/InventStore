@@ -53,7 +53,7 @@ public class OrdenController {
     }
 
     @PatchMapping("/{id}/agregar-detalle")
-    public OrdenResponse agregarDetalle(@PathVariable Long id, @RequestBody CrearDetalleOrdenRequest request){
+    public OrdenResponse agregarDetalle(@PathVariable Long id, @Valid @RequestBody CrearDetalleOrdenRequest request){
         Orden orden = ordenService.agregarDetalle(id, request);
         return ordenMapper.toResponse(orden);
     }
