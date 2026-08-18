@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -30,5 +33,11 @@ public class Proveedor {
 
     @Column(nullable = false)
     private boolean activo = true;
+
+    @OneToMany(mappedBy = "compra",
+                cascade = CascadeType.ALL,
+                orphanRemoval = true
+    )
+    private List<Compra> compras = new ArrayList<>();
 
 }
