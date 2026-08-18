@@ -6,8 +6,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,4 +41,15 @@ public class Producto {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
+
+    @OneToMany(mappedBy ="producto",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ConsumoProducto> consumos = new ArrayList<>();
+
+
+    public void agregarConsumo(ConsumoProducto consumo) {
+        consumos.add(consumo);
+        consumo.setProducto(this);
+    }
 }

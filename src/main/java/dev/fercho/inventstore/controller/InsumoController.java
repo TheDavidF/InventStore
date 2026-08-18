@@ -41,4 +41,10 @@ public class InsumoController {
     public InsumoResponse crearInsumo(@RequestBody@Valid CrearInsumoRequest request){
         return insumoMapper.toResponse(insumoService.crearInsumo(request));
     }
+
+    @GetMapping("/stock-bajo")
+    public List<InsumoResponse> obtenerPorStockMinimo(){
+        List<Insumo> insumos = insumoService.obtenerPorStockMinimo();
+        return insumoMapper.toList(insumos);
+    }
 }

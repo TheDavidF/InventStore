@@ -36,4 +36,8 @@ public class InsumoService {
     public List<Insumo> obtenerInsumos(){
         return insumoRepository.findAll();
     }
+
+    public List<Insumo> obtenerPorStockMinimo(){
+        return insumoRepository.findInsumosBajoStockMinimo();
+    }
 }

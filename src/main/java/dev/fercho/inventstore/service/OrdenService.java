@@ -3,10 +3,7 @@ package dev.fercho.inventstore.service;
 import dev.fercho.inventstore.dto.request.CambiarCantidadDetalleRequest;
 import dev.fercho.inventstore.dto.request.CrearDetalleOrdenRequest;
 import dev.fercho.inventstore.dto.request.CrearOrdenRequest;
-import dev.fercho.inventstore.model.DetalleOrden;
-import dev.fercho.inventstore.model.Orden;
-import dev.fercho.inventstore.model.Producto;
-import dev.fercho.inventstore.model.Usuario;
+import dev.fercho.inventstore.model.*;
 import dev.fercho.inventstore.model.enums.EstadoOrden;
 import dev.fercho.inventstore.repository.DetalleOrdenRepository;
 import dev.fercho.inventstore.repository.OrdenRepository;
@@ -16,11 +13,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.security.Key;
 import java.security.PublicKey;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.LongFunction;
 
 
@@ -31,16 +33,20 @@ public class OrdenService {
     private final UsuarioRepository usuarioRepository;
     private final ProductoRepository productoRepository;
 
+    private final MovimientoInventarioService movimientoInventarioService;
+
     private final DetalleOrdenRepository detalleOrdenRepository;
 
     public OrdenService(ProductoRepository productoRepository,
                         UsuarioRepository usuarioRepository,
                         OrdenRepository ordenRepository,
-                        DetalleOrdenRepository detalleOrdenRepository) {
+                        DetalleOrdenRepository detalleOrdenRepository,
+                        MovimientoInventarioService movimientoInventarioService) {
         this.productoRepository = productoRepository;
         this.usuarioRepository = usuarioRepository;
         this.ordenRepository = ordenRepository;
         this.detalleOrdenRepository = detalleOrdenRepository;
+        this.movimientoInventarioService = movimientoInventarioService;
     }
 
 
@@ -160,9 +166,9 @@ public class OrdenService {
     @Transactional
     public Orden cancelarOrden(Long id){
         Orden orden = buscarPorId(id);
-        if (orden.getEstado() == EstadoOrden.ENTREGADA) {
+        if (orden.getEstado() != EstadoOrden.CREADA) {
             throw new RuntimeException(
-                    "Una orden entregada no puede cancelarse"
+                    "Solo una orden en estado CREADA puede cancelarse"
             );
         }
         orden.setEstado(EstadoOrden.CANCELADA);
@@ -170,11 +176,48 @@ public class OrdenService {
     }
 
 
+
+    @Transactional
+    public Orden prepararOrden(Long id){
+        Orden orden = buscarPorId(id);
+        if(orden.getEstado() != EstadoOrden.CREADA){
+            throw new RuntimeException("La orden debe estar creada");
+        }
+        descontarInventario(orden);
+
+        orden.setEstado(EstadoOrden.PREPARANDO);
+        return ordenRepository.save(orden);
+    }
+
+
+
+    @Transactional
+    public Orden completarOrden(Long id){
+        Orden orden = buscarPorId(id);
+        if(orden.getEstado() != EstadoOrden.PREPARANDO){
+            throw new RuntimeException("La orden debe estar en preparación");
+        }
+        orden.setEstado(EstadoOrden.LISTA);
+        return ordenRepository.save(orden);
+    }
+
+    @Transactional
+    public Orden entregarOrden(Long id){
+        Orden orden = buscarPorId(id);
+        if(orden.getEstado() != EstadoOrden.LISTA){
+            throw new RuntimeException("La orden debe estar lista");
+        }
+        orden.setEstado(EstadoOrden.ENTREGADA);
+        return ordenRepository.save(orden);
+    }
+
+
+
     private Producto buscarProductoActivo(Long productoId) {
 
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() ->
-                        new RuntimeException("Producto no encontrado")
+                        new RuntimeException( "Solo una orden en estado CREADA puede iniciar preparación")
                 );
 
         if (!producto.isActivo()) {
@@ -194,5 +237,32 @@ public class OrdenService {
                     "Solo se pueden modificar órdenes en estado CREADA"
             );
         }
+    }
+
+    private void descontarInventario(Orden orden) {
+        Map<Insumo,Integer> insumos = new HashMap<>();
+        for (DetalleOrden detalle:orden.getDetalles()) {
+            for (ConsumoProducto consumo:detalle.getProducto().getConsumos()) {
+                Insumo insumo = consumo.getInsumo();
+                int totalInsumoPorDetalle = consumo.getCantidad() * detalle.getCantidad();
+                insumos.merge(insumo, totalInsumoPorDetalle, Integer::sum);
+            }
+        }
+        insumos.forEach((insumo, cantidadTotal) -> {
+            if(insumo.getStockActual() < cantidadTotal){
+                throw new RuntimeException(
+                        "Stock insuficiente de " + insumo.getNombre()
+                                + ". Disponible: " + insumo.getStockActual()
+                                + ", requerido: " + cantidadTotal
+                );
+            }
+        });
+
+        String motivo = "Consumo por orden #" + orden.getId();
+        insumos.forEach((insumo, cantidadTotal) -> {
+            movimientoInventarioService.registrarSalidaVenta(insumo,cantidadTotal,motivo);
+        });
+
+
     }
 }

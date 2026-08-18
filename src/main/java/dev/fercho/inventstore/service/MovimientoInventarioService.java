@@ -22,7 +22,33 @@ public class MovimientoInventarioService {
         this.insumoRepository = insumoRepository;
     }
 
+    @Transactional
+    public MovimientoInventario registrarSalidaVenta(
+            Insumo insumo,
+            Integer cantidad,
+            String motivo) {
 
+        Integer stockAnterior = insumo.getStockActual();
+
+        aplicarMovimiento(
+                insumo,
+                TipoMovimientoInventario.SALIDA_VENTA,
+                cantidad
+        );
+
+        Integer stockPosterior = insumo.getStockActual();
+
+        MovimientoInventario movimiento = new MovimientoInventario();
+
+        movimiento.setInsumo(insumo);
+        movimiento.setTipo(TipoMovimientoInventario.SALIDA_VENTA);
+        movimiento.setCantidad(cantidad);
+        movimiento.setMotivo(motivo);
+        movimiento.setStockAnterior(stockAnterior);
+        movimiento.setStockPosterior(stockPosterior);
+
+        return movimientoInventarioRepository.save(movimiento);
+    }
 
     private MovimientoInventario registrarMovimiento(
             CrearMovimientoInventarioRequest request, TipoMovimientoInventario tipo) {

@@ -79,4 +79,26 @@ public class OrdenController {
         return ordenMapper.toResponse(orden);
 
     }
+
+    @PatchMapping("/{id}/preparar")
+    public OrdenResponse prepararOrden(@PathVariable Long id) {
+        Orden orden = ordenService.prepararOrden(id);
+        return ordenMapper.toResponse(orden);
+    }
+
+    @PatchMapping("/{id}/completar")
+    public OrdenResponse completarOrden(@PathVariable Long id) {
+
+        Orden orden = ordenService.completarOrden(id);
+
+        return ordenMapper.toResponse(orden);
+    }
+
+    @PatchMapping("/{id}/entregar")
+    public OrdenResponse entregarOrden(@PathVariable Long id) {
+
+        Orden orden = ordenService.entregarOrden(id);
+
+        return ordenMapper.toResponse(orden);
+    }
 }

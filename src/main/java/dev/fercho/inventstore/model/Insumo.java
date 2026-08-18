@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.security.PrivateKey;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "insumos")
@@ -30,6 +32,17 @@ public class Insumo {
 
     @Column(nullable = false)
     private boolean activo;
+
+
+    @OneToMany(mappedBy ="insumo",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ConsumoProducto> consumos = new ArrayList<>();
+
+    public void agregarConsumo(ConsumoProducto consumo) {
+        consumos.add(consumo);
+        consumo.setInsumo(this);
+    }
 
     @PrePersist
     public void prePersist(){
