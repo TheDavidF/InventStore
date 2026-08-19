@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -15,4 +17,7 @@ public class CrearCompraRequest {
 
     @NotNull(message = "es necesario el id del proveedor")
     private Long proveedorId;
+
+    @Valid
+    private List<AgregarDetalleCompraRequest> detalles;
 }

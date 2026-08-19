@@ -34,7 +34,7 @@ public class Proveedor {
     @Column(nullable = false)
     private boolean activo = true;
 
-    @OneToMany(mappedBy = "compra",
+    @OneToMany(mappedBy = "proveedor",
                 cascade = CascadeType.ALL,
                 orphanRemoval = true
     )
