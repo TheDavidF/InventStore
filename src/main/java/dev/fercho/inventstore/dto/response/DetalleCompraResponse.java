@@ -28,4 +28,6 @@ public class DetalleCompraResponse {
     private BigDecimal subtotal;
 
     private String observacion;
+
+    private Integer unidadesPorPresentacion;
 }

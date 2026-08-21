@@ -50,6 +50,56 @@ public class MovimientoInventarioService {
         return movimientoInventarioRepository.save(movimiento);
     }
 
+
+    /*
+     *
+     * Ese método debe recibir:
+
+        el Insumo;
+        la cantidad real en unidades individuales;
+        un motivo.
+
+        Y debe registrar un movimiento de tipo ENTRADA, guardando también stockAnterior y stockPosterior.
+
+        Después, en CompraService, al pagar una compra:
+
+        calcular el total;
+        recorrer todos los DetalleCompra;
+        calcular cantidad × unidadesPorPresentacion;
+        llamar al método de entrada de inventario para cada detalle;
+        cambiar la compra a PAGADA;
+        asignar fechaPagada;
+        guardar todo dentro de la misma transacción.
+     *
+     *
+     */
+
+
+    @Transactional
+    public MovimientoInventario registrarEntradaCompra(
+            Insumo insumo,
+            Integer cantidad,
+            String motivo) {
+
+        Integer stockAnterior = insumo.getStockActual();
+
+         aplicarMovimiento(insumo, TipoMovimientoInventario.ENTRADA, cantidad);
+
+        Integer stockPosterior = insumo.getStockActual();
+
+        MovimientoInventario movimiento = new MovimientoInventario();
+
+        movimiento.setInsumo(insumo);
+        movimiento.setTipo(TipoMovimientoInventario.ENTRADA);
+        movimiento.setCantidad(cantidad);
+        movimiento.setMotivo(motivo);
+        movimiento.setStockAnterior(stockAnterior);
+        movimiento.setStockPosterior(stockPosterior);
+
+        return movimientoInventarioRepository.save(movimiento);
+
+    }
+
     private MovimientoInventario registrarMovimiento(
             CrearMovimientoInventarioRequest request, TipoMovimientoInventario tipo) {
 

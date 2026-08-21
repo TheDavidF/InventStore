@@ -22,15 +22,18 @@ public class CompraService {
 
     private final CompraRepository compraRepository;
     private final ProveedorService proveedorService;
+    private final MovimientoInventarioService movimientoInventarioService;
 
 
     private final  InsumoService insumoService;
 
     public CompraService(CompraRepository compraRepository, ProveedorService proveedorService
-            ,InsumoService insumoService) {
+            ,InsumoService insumoService
+            ,MovimientoInventarioService movimientoInventarioService) {
         this.compraRepository = compraRepository;
         this.proveedorService = proveedorService;
         this.insumoService = insumoService;
+        this.movimientoInventarioService = movimientoInventarioService;
     }
 
 
@@ -45,7 +48,22 @@ public class CompraService {
                 agregarDetalle(compra,detalleRequest);
             }
         }
-        return compraRepository.save(compra);
+
+        compraRepository.save(compra);
+
+        for (DetalleCompra detalle:
+                compra.getDetallesCompra()) {
+
+            Integer cantidadReal =
+                    detalle.getCantidad()
+                            * detalle.getUnidadesPorPresentacion();
+
+            movimientoInventarioService.registrarEntradaCompra(detalle.getInsumo()
+                    ,cantidadReal
+                    ,"Entrad Por compra #" +compra.getId() );
+        }
+
+        return compra;
     }
 
     @Transactional(readOnly = true)
@@ -112,6 +130,9 @@ public class CompraService {
         detalleCompra.setObservacion(req.getObservacion());
         detalleCompra.setUnidadMedida(req.getUnidadMedida());
         detalleCompra.setPrecioUnitario(req.getPrecioUnitario());
+        detalleCompra.setUnidadesPorPresentacion(
+                req.getUnidadesPorPresentacion()
+        );
         detalleCompra.setInsumo(insumo);
 
         if (req.getPrecioUnitario() != null) {

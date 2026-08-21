@@ -33,6 +33,10 @@ public class AgregarDetalleCompraRequest {
     )
     private BigDecimal precioUnitario;
 
+    @NotNull(message = "Las unidades por presentación son obligatorias")
+    @Positive(message = "Las unidades por presentación deben ser mayores a cero")
+    private Integer unidadesPorPresentacion;
+
     @Size(
             max = 300,
             message = "La observación no puede superar los 300 caracteres"
@@ -41,4 +45,6 @@ public class AgregarDetalleCompraRequest {
 
     @NotNull(message = "La unidad de medida es obligatoria")
     private TipoUnidadMedida unidadMedida;
+
+
 }

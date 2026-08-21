@@ -26,7 +26,7 @@ public class DetalleCompra {
     @Column(nullable = false)
     private Integer cantidad;
 
-    @Column(name = "unidad_medida")
+    @Column(name = "unidad_medida", nullable = false)
     @Enumerated(EnumType.STRING)
     private TipoUnidadMedida unidadMedida;
 
@@ -38,6 +38,9 @@ public class DetalleCompra {
 
     @Column(length = 300)
     private String observacion;
+
+    @Column(name = "unidades_por_presentacion", nullable = false)
+    private Integer unidadesPorPresentacion;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "compra_id", nullable = false)
