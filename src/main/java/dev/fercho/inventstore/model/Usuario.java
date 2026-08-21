@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,6 +43,9 @@ public class Usuario {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Caja> cajas = new ArrayList<>();
 
     @PrePersist
     public void asignarFechaCreacion(){

@@ -48,6 +48,9 @@ public class Orden {
     )
     private List<DetalleOrden> detalles = new ArrayList<>() ;
 
+    @OneToOne(mappedBy = "orden")
+    private Pago pago;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
