@@ -60,7 +60,7 @@ public class CompraService {
 
             movimientoInventarioService.registrarEntradaCompra(detalle.getInsumo()
                     ,cantidadReal
-                    ,"Entrad Por compra #" +compra.getId() );
+                    ,"Entrada Por compra #" +compra.getId() );
         }
 
         return compra;

@@ -46,7 +46,7 @@ public class Compra {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private EstadoCompra estado;
+    private EstadoCompra estado = EstadoCompra.PENDIENTE_PAGO;
 
     @PrePersist
     public void prePersist() {

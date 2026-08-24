@@ -55,7 +55,9 @@ public class CompraMapper {
         response.setPrecioUnitario(detalle.getPrecioUnitario());
         response.setSubtotal(detalle.getSubtotal());
         response.setObservacion(detalle.getObservacion());
-
+        response.setUnidadesPorPresentacion(
+                detalle.getUnidadesPorPresentacion()
+        );
         return response;
     }
 
