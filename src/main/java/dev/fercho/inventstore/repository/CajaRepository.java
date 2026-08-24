@@ -11,4 +11,6 @@ public interface CajaRepository extends JpaRepository<Caja, Long> {
     boolean existsByEstadoAndUsuarioId(EstadoCaja estado, Long usuarioId);
 
     Optional<Caja> findByEstadoAndUsuarioId(EstadoCaja estadoCaja, Long usuarioId);
+
+
 }

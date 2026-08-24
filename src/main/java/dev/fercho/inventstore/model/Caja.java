@@ -29,6 +29,9 @@ public class Caja {
     @Column(name = "monto_final", precision = 10, scale = 2)
     private BigDecimal montoFinal;
 
+    @Column(name = "monto_final", precision = 10, scale = 2)
+    private BigDecimal montoEsperado;
+
     @Column(name = "fecha_apertura", nullable = false)
     private LocalDateTime fechaApertura;
 

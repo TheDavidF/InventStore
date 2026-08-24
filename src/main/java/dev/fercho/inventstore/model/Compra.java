@@ -43,6 +43,7 @@ public class Compra {
     private BigDecimal total;
 
 
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private EstadoCompra estado;
