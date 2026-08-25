@@ -1,6 +1,7 @@
 package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.CrearConsumoProducto;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.ConsumoProducto;
 import dev.fercho.inventstore.model.Insumo;
 import dev.fercho.inventstore.model.Producto;
@@ -62,7 +63,7 @@ public class ConsumoProductoService {
 
     public ConsumoProducto buscarPorId(Long id){
         return consumoProductoRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("No se encontro ningun consumo"));
+                .orElseThrow(()-> new RecursoNoEncontradoException("No se encontro ningun consumo"));
     }
 
 

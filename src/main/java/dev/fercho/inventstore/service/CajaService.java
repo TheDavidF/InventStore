@@ -5,6 +5,7 @@ package dev.fercho.inventstore.service;
 import dev.fercho.inventstore.dto.request.AbrirCajaRequest;
 import dev.fercho.inventstore.dto.request.CerrarCajaRequest;
 import dev.fercho.inventstore.dto.request.CrearPagoRequest;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.Caja;
 import dev.fercho.inventstore.model.Pago;
 import dev.fercho.inventstore.model.Usuario;
@@ -34,7 +35,7 @@ public class CajaService {
          return cajaRepository
                  .findByEstadoAndUsuarioId(EstadoCaja.ABIERTA, usuarioId)
                 .orElseThrow(()->
-                        new RuntimeException("La caja no existe")
+                        new RecursoNoEncontradoException("La caja no existe")
                 );
 
     }
@@ -56,7 +57,7 @@ public class CajaService {
     public Caja obtenerPorId(Long cajaId){
         return cajaRepository.findById(cajaId)
                 .orElseThrow(()->
-                        new RuntimeException("Caja no encontrada"));
+                        new RecursoNoEncontradoException("Caja no encontrada"));
     }
 
 
@@ -64,7 +65,7 @@ public class CajaService {
     public Caja cerrarCaja(CerrarCajaRequest req, Long cajaId){
         Caja caja = obtenerPorId(cajaId);
         if(caja.getEstado() == EstadoCaja.CERRADA){
-            throw new RuntimeException("La caja ya ha sido cerrada");
+            throw new RecursoNoEncontradoException("La caja ya ha sido cerrada");
         }
         BigDecimal montoEsperado = BigDecimal.ZERO;
         for (Pago pago:

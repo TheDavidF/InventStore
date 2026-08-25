@@ -2,6 +2,7 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.ActualizarProveedorRequest;
 import dev.fercho.inventstore.dto.request.CrearProveedorRequest;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.Proveedor;
 import dev.fercho.inventstore.repository.ProveedorRepository;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class ProveedorService {
 
     public Proveedor buscarPorId(Long id){
         return proveedorRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("No se encontro el proveedor"));
+                .orElseThrow(()-> new RecursoNoEncontradoException("No se encontro el proveedor"));
     }
 
 

@@ -2,6 +2,7 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.AgregarDetalleCompraRequest;
 import dev.fercho.inventstore.dto.request.CrearCompraRequest;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.mapper.CompraMapper;
 import dev.fercho.inventstore.model.Compra;
 import dev.fercho.inventstore.model.DetalleCompra;
@@ -75,7 +76,7 @@ public class CompraService {
     @Transactional(readOnly = true)
     public Compra obtenerPorId(Long id){
         return compraRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Compra no encontrada"));
+                .orElseThrow(()-> new RecursoNoEncontradoException("Compra no encontrada"));
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.ActualizarProductoRequest;
 import dev.fercho.inventstore.dto.request.CrearProductoRequest;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.Categoria;
 import dev.fercho.inventstore.model.Producto;
 import dev.fercho.inventstore.repository.CategoriaRepository;
@@ -30,7 +31,7 @@ public class ProductoService {
         producto.setPrecio(request.getPrecio());
         producto.setDescripcion(request.getDescripcion());
         Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
-                .orElseThrow(()-> new RuntimeException("Categoria no encontrada"));
+                .orElseThrow(()-> new RecursoNoEncontradoException("Categoria no encontrada"));
         producto.setCategoria(categoria);
         return productoRepository.save(producto);
     }
@@ -52,7 +53,7 @@ public class ProductoService {
     public Producto buscarPorId(Long id){
         return productoRepository.findById(id)
                 .orElseThrow(
-                        ()-> new RuntimeException("Producto no encontrado"));
+                        ()-> new RecursoNoEncontradoException("Producto no encontrado"));
     }
 
     public Producto desactivarProducto(Long id){

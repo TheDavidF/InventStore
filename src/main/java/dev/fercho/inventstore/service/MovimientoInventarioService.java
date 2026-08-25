@@ -2,6 +2,7 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.AjustarInventarioRequest;
 import dev.fercho.inventstore.dto.request.CrearMovimientoInventarioRequest;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.Insumo;
 import dev.fercho.inventstore.model.MovimientoInventario;
 import dev.fercho.inventstore.model.enums.TipoMovimientoInventario;
@@ -51,29 +52,6 @@ public class MovimientoInventarioService {
     }
 
 
-    /*
-     *
-     * Ese método debe recibir:
-
-        el Insumo;
-        la cantidad real en unidades individuales;
-        un motivo.
-
-        Y debe registrar un movimiento de tipo ENTRADA, guardando también stockAnterior y stockPosterior.
-
-        Después, en CompraService, al pagar una compra:
-
-        calcular el total;
-        recorrer todos los DetalleCompra;
-        calcular cantidad × unidadesPorPresentacion;
-        llamar al método de entrada de inventario para cada detalle;
-        cambiar la compra a PAGADA;
-        asignar fechaPagada;
-        guardar todo dentro de la misma transacción.
-     *
-     *
-     */
-
 
     @Transactional
     public MovimientoInventario registrarEntradaCompra(
@@ -105,7 +83,7 @@ public class MovimientoInventarioService {
 
         Insumo insumo = insumoRepository.findById(request.getInsumoId())
                 .orElseThrow(() ->
-                        new RuntimeException("No se encontró el insumo")
+                        new RecursoNoEncontradoException("No se encontró el insumo")
                 );
 
         Integer stockAnterior = insumo.getStockActual();
@@ -147,7 +125,7 @@ public class MovimientoInventarioService {
     public MovimientoInventario ajustarInventario(AjustarInventarioRequest request){
         Insumo insumo = insumoRepository.findById(request.getInsumoId())
                 .orElseThrow(() ->
-                        new RuntimeException("No se encontró el insumo")
+                        new RecursoNoEncontradoException("No se encontró el insumo")
                 );
         Integer stockAnterior = insumo.getStockActual();
         Integer nuevoStock = request.getNuevoStock();

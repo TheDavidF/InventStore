@@ -5,6 +5,7 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.ActualizarUsuarioRequest;
 import dev.fercho.inventstore.exception.CorreoDuplicadoException;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.Producto;
 import dev.fercho.inventstore.model.Usuario;
 import dev.fercho.inventstore.repository.UsuarioRepository;
@@ -40,7 +41,7 @@ public class UsuarioService {
     public Usuario buscarPorId(Long id){
         return usuarioRepository.findById(id)
                 .orElseThrow(()->
-                        new RuntimeException("Usuario no encontrado"));
+                        new RecursoNoEncontradoException("Usuario no encontrado"));
 
     }
 

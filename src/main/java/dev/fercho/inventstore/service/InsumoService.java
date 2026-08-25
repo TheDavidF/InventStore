@@ -2,6 +2,7 @@ package dev.fercho.inventstore.service;
 
 
 import dev.fercho.inventstore.dto.request.CrearInsumoRequest;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.Insumo;
 import dev.fercho.inventstore.repository.InsumoRepository;
 
@@ -29,7 +30,7 @@ public class InsumoService {
 
     public Insumo getById(Long id){
         return insumoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Insumo no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Insumo no encontrado"));
     }
 
 

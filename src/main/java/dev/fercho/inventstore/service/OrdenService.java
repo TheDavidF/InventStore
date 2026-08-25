@@ -3,6 +3,7 @@ package dev.fercho.inventstore.service;
 import dev.fercho.inventstore.dto.request.CambiarCantidadDetalleRequest;
 import dev.fercho.inventstore.dto.request.CrearDetalleOrdenRequest;
 import dev.fercho.inventstore.dto.request.CrearOrdenRequest;
+import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.*;
 import dev.fercho.inventstore.model.enums.EstadoOrden;
 import dev.fercho.inventstore.repository.DetalleOrdenRepository;
@@ -53,7 +54,7 @@ public class OrdenService {
     @Transactional
     public Orden crearOrden(CrearOrdenRequest request){
         Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
-                .orElseThrow(()-> new RuntimeException("No se encontro un usuario"));
+                .orElseThrow(()-> new RecursoNoEncontradoException("No se encontro un usuario"));
 
         Orden orden = new Orden();
         orden.setUsuario(usuario);
@@ -90,7 +91,7 @@ public class OrdenService {
     public Orden buscarPorId(Long id){
         return ordenRepository.findById(id)
                 .orElseThrow(
-                        ()-> new RuntimeException("Orden no encontrada"));
+                        ()-> new RecursoNoEncontradoException("Orden no encontrada"));
     }
 
 
@@ -108,7 +109,7 @@ public class OrdenService {
 
         if(usuarioId != null){
             Usuario usuario = usuarioRepository.findById(usuarioId)
-                    .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
+                    .orElseThrow(()-> new RecursoNoEncontradoException("Usuario no encontrado"));
             return ordenRepository.findByUsuario(usuario);
         }
 
