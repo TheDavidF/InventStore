@@ -1,6 +1,7 @@
 package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.CrearConsumoProducto;
+import dev.fercho.inventstore.exception.PeticionInvalidaException;
 import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.ConsumoProducto;
 import dev.fercho.inventstore.model.Insumo;
@@ -34,7 +35,7 @@ public class ConsumoProductoService {
                 request.getProductoId(),
                 request.getInsumoId())) {
 
-            throw new RuntimeException(
+            throw new PeticionInvalidaException(
                     "El insumo ya está asociado a este producto"
             );
         }
@@ -71,7 +72,7 @@ public class ConsumoProductoService {
     public ConsumoProducto actualizarCantidad(Long id, Integer nuevaCantidad) {
 
         if (nuevaCantidad == null || nuevaCantidad <= 0) {
-            throw new RuntimeException("La cantidad debe ser mayor a 0");
+            throw new PeticionInvalidaException("La cantidad debe ser mayor a 0");
         }
 
         ConsumoProducto consumoProducto = buscarPorId(id);

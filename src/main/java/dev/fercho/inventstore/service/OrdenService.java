@@ -3,6 +3,8 @@ package dev.fercho.inventstore.service;
 import dev.fercho.inventstore.dto.request.CambiarCantidadDetalleRequest;
 import dev.fercho.inventstore.dto.request.CrearDetalleOrdenRequest;
 import dev.fercho.inventstore.dto.request.CrearOrdenRequest;
+import dev.fercho.inventstore.exception.ConflictoEstadoException;
+import dev.fercho.inventstore.exception.PeticionInvalidaException;
 import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.*;
 import dev.fercho.inventstore.model.enums.EstadoOrden;
@@ -142,7 +144,7 @@ public class OrdenService {
         Orden orden = buscarPorId(id);
         validarOrdenModificable(orden);
         DetalleOrden detalleOrden = detalleOrdenRepository.findByIdAndOrdenId(detalleId, id)
-                .orElseThrow(()-> new RuntimeException("El detalle no pertenece a la orden"));
+                .orElseThrow(()-> new PeticionInvalidaException("El detalle no pertenece a la orden"));
         orden.setTotal(orden.getTotal().subtract(detalleOrden.getSubtotal()));
         orden.getDetalles().remove(detalleOrden);
         return ordenRepository.save(orden);
@@ -153,7 +155,7 @@ public class OrdenService {
         Orden orden = buscarPorId(id);
         validarOrdenModificable(orden);
         DetalleOrden detalleOrden = detalleOrdenRepository.findByIdAndOrdenId(detalleId, id)
-                .orElseThrow(()-> new RuntimeException("El detalle no pertenece a la orden"));
+                .orElseThrow(()-> new PeticionInvalidaException("El detalle no pertenece a la orden"));
         BigDecimal precioUnitario = detalleOrden.getPrecioUnitario();
         BigDecimal nuevoSubtotal = precioUnitario.multiply(BigDecimal.valueOf(request.getCantidad()));
         orden.setTotal(orden.getTotal().subtract(detalleOrden.getSubtotal()));
@@ -168,7 +170,7 @@ public class OrdenService {
     public Orden cancelarOrden(Long id){
         Orden orden = buscarPorId(id);
         if (orden.getEstado() != EstadoOrden.CREADA) {
-            throw new RuntimeException(
+            throw new ConflictoEstadoException(
                     "Solo una orden en estado CREADA puede cancelarse"
             );
         }
@@ -182,7 +184,7 @@ public class OrdenService {
     public Orden prepararOrden(Long id){
         Orden orden = buscarPorId(id);
         if(orden.getEstado() != EstadoOrden.CREADA){
-            throw new RuntimeException("La orden debe estar creada");
+            throw new ConflictoEstadoException("La orden debe estar creada");
         }
         descontarInventario(orden);
 
@@ -196,7 +198,7 @@ public class OrdenService {
     public Orden completarOrden(Long id){
         Orden orden = buscarPorId(id);
         if(orden.getEstado() != EstadoOrden.PREPARANDO){
-            throw new RuntimeException("La orden debe estar en preparación");
+            throw new ConflictoEstadoException("La orden debe estar en preparación");
         }
         orden.setEstado(EstadoOrden.LISTA);
         return ordenRepository.save(orden);
@@ -206,7 +208,7 @@ public class OrdenService {
     public Orden entregarOrden(Long id){
         Orden orden = buscarPorId(id);
         if(orden.getEstado() != EstadoOrden.LISTA){
-            throw new RuntimeException("La orden debe estar lista");
+            throw new ConflictoEstadoException("La orden debe estar lista");
         }
         orden.setEstado(EstadoOrden.ENTREGADA);
         return ordenRepository.save(orden);
@@ -218,11 +220,11 @@ public class OrdenService {
 
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() ->
-                        new RuntimeException( "Solo una orden en estado CREADA puede iniciar preparación")
+                        new ConflictoEstadoException( "Solo una orden en estado CREADA puede iniciar preparación")
                 );
 
         if (!producto.isActivo()) {
-            throw new RuntimeException(
+            throw new ConflictoEstadoException(
                     "No se puede agregar un producto inactivo"
             );
         }
@@ -234,7 +236,7 @@ public class OrdenService {
     private void validarOrdenModificable(Orden orden) {
 
         if (orden.getEstado() != EstadoOrden.CREADA && orden.getEstado() != EstadoOrden.PREPARANDO) {
-            throw new RuntimeException(
+            throw new ConflictoEstadoException(
                     "Solo se pueden modificar órdenes en estado CREADA"
             );
         }
@@ -251,7 +253,7 @@ public class OrdenService {
         }
         insumos.forEach((insumo, cantidadTotal) -> {
             if(insumo.getStockActual() < cantidadTotal){
-                throw new RuntimeException(
+                throw new PeticionInvalidaException(
                         "Stock insuficiente de " + insumo.getNombre()
                                 + ". Disponible: " + insumo.getStockActual()
                                 + ", requerido: " + cantidadTotal

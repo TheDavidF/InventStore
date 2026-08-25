@@ -3,6 +3,8 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.CrearPagoRequest;
 import dev.fercho.inventstore.dto.response.PagoResponse;
+import dev.fercho.inventstore.exception.ConflictoEstadoException;
+import dev.fercho.inventstore.exception.PeticionInvalidaException;
 import dev.fercho.inventstore.model.Caja;
 import dev.fercho.inventstore.model.Orden;
 import dev.fercho.inventstore.model.Pago;
@@ -37,15 +39,15 @@ public class PagoService {
     public Pago registrarPago(CrearPagoRequest req){
         Orden orden = ordenService.buscarPorId(req.getOrdenId());
         if(orden.getEstado() == EstadoOrden.CANCELADA){
-           throw new RuntimeException("La orden ya ha sido cancelada y no se preparo");
+           throw new ConflictoEstadoException("La orden ya ha sido cancelada y no se preparo");
         }
         if(orden.getPago() != null){
-            throw new RuntimeException("La orden ya fue pagada");
+            throw new ConflictoEstadoException("La orden ya fue pagada");
         }
         Usuario usuario = orden.getUsuario();
         Caja caja = cajaService.obtenerCajaAbierta(usuario.getId());
         if(req.getMontoRecibido().compareTo(orden.getTotal()) < 0){
-            throw new RuntimeException("Monto insuficiente");
+            throw new PeticionInvalidaException("Monto insuficiente");
         }
         Pago pago = new Pago();
         pago.setOrden(orden);

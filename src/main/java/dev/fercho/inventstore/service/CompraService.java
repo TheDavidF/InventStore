@@ -2,6 +2,7 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.AgregarDetalleCompraRequest;
 import dev.fercho.inventstore.dto.request.CrearCompraRequest;
+import dev.fercho.inventstore.exception.ConflictoEstadoException;
 import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.mapper.CompraMapper;
 import dev.fercho.inventstore.model.Compra;
@@ -93,7 +94,7 @@ public class CompraService {
             throw new RuntimeException("La compra no tiene insumos registrados");
         }
         if (compra.getEstado() != EstadoCompra.PENDIENTE_PAGO) {
-            throw new RuntimeException("La compra ya fue pagada");
+            throw new ConflictoEstadoException("La compra ya fue pagada");
         }
         calcularTotal(compra);
         compra.setEstado(EstadoCompra.PAGADA);
@@ -121,7 +122,7 @@ public class CompraService {
             AgregarDetalleCompraRequest req) {
 
         if (compra.getEstado() != EstadoCompra.PENDIENTE_PAGO) {
-            throw new RuntimeException("La compra ya ha sido pagada");
+            throw new ConflictoEstadoException("La compra ya ha sido pagada");
         }
 
         Insumo insumo = insumoService.getById(req.getInsumoId());

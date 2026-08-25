@@ -2,6 +2,7 @@ package dev.fercho.inventstore.service;
 
 import dev.fercho.inventstore.dto.request.AjustarInventarioRequest;
 import dev.fercho.inventstore.dto.request.CrearMovimientoInventarioRequest;
+import dev.fercho.inventstore.exception.PeticionInvalidaException;
 import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.model.Insumo;
 import dev.fercho.inventstore.model.MovimientoInventario;
@@ -167,7 +168,7 @@ public class MovimientoInventarioService {
 
             case SALIDA_VENTA, MERMA -> {
                     if (insumo.getStockActual() < cantidad) {
-                        throw new RuntimeException("Stock insuficiente");
+                        throw new PeticionInvalidaException("Stock insuficiente");
                     }
 
                     insumo.setStockActual(
