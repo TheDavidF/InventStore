@@ -9,18 +9,19 @@ import dev.fercho.inventstore.mapper.MovimientoInventarioMapper;
 import dev.fercho.inventstore.model.MovimientoInventario;
 import dev.fercho.inventstore.service.MovimientoInventarioService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventario")
-public class MovientoInventarioController {
+public class MovimentoInventarioController {
 
     private final MovimientoInventarioService movimientoInventarioService;
     private final MovimientoInventarioMapper movimientoInventarioMapper;
 
-    public MovientoInventarioController(MovimientoInventarioService movimientoInventarioService
+    public MovimentoInventarioController(MovimientoInventarioService movimientoInventarioService
             , MovimientoInventarioMapper movimientoInventarioMapper) {
         this.movimientoInventarioService = movimientoInventarioService;
         this.movimientoInventarioMapper = movimientoInventarioMapper;
@@ -35,6 +36,7 @@ public class MovientoInventarioController {
     }
 
     @PostMapping("/entradas")
+    @ResponseStatus(HttpStatus.CREATED)
     public MovimientoInventarioResponse registrarEntrada(
             @Valid @RequestBody CrearMovimientoInventarioRequest request) {
 
@@ -45,6 +47,7 @@ public class MovientoInventarioController {
     }
 
     @PostMapping("/mermas")
+    @ResponseStatus(HttpStatus.CREATED)
     public MovimientoInventarioResponse registrarMerma(
             @Valid @RequestBody CrearMovimientoInventarioRequest request) {
 
@@ -57,6 +60,7 @@ public class MovientoInventarioController {
 
 
     @PostMapping("/ajustes")
+    @ResponseStatus(HttpStatus.CREATED)
     public AjusteInventarioResponse registrarAjuste(@Valid @RequestBody AjustarInventarioRequest request){
         MovimientoInventario ajuste = movimientoInventarioService.ajustarInventario(request);
 

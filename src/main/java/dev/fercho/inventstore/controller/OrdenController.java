@@ -11,13 +11,14 @@ import dev.fercho.inventstore.model.enums.EstadoOrden;
 import dev.fercho.inventstore.service.OrdenService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 
-@RestController()
+@RestController
 @RequestMapping("/api/ordenes")
 public class OrdenController {
 
@@ -31,7 +32,8 @@ public class OrdenController {
     }
 
     @PostMapping
-    public OrdenResponse crearOrden(@Valid@RequestBody CrearOrdenRequest request){
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrdenResponse crearOrden(@Valid @RequestBody CrearOrdenRequest request){
         Orden orden = ordenService.crearOrden(request);
 
         return ordenMapper.toResponse(orden);

@@ -7,6 +7,7 @@ import dev.fercho.inventstore.dto.response.CajaResponse;
 import dev.fercho.inventstore.mapper.CajaMapper;
 import dev.fercho.inventstore.service.CajaService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class CajaController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CajaResponse abrirCaja(@Valid @RequestBody  AbrirCajaRequest req){
         return cajaMapper.toResponse(cajaService.abrirCaja(req));
     }

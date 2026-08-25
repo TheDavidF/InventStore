@@ -7,13 +7,13 @@ import dev.fercho.inventstore.mapper.InsumoMapper;
 import dev.fercho.inventstore.model.Insumo;
 import dev.fercho.inventstore.service.InsumoService;
 import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/insumos" )
+@RequestMapping("/api/insumos")
 public class InsumoController {
 
 
@@ -38,6 +38,7 @@ public class InsumoController {
 
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public InsumoResponse crearInsumo(@RequestBody@Valid CrearInsumoRequest request){
         return insumoMapper.toResponse(insumoService.crearInsumo(request));
     }

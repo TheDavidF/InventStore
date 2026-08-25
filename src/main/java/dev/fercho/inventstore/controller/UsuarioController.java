@@ -8,6 +8,7 @@ import dev.fercho.inventstore.mapper.UsuarioMapper;
 import dev.fercho.inventstore.model.Usuario;
 import dev.fercho.inventstore.service.UsuarioService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class UsuarioController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse crearUsuario(@Valid @RequestBody CrearUsuarioRequest request){
 
         Usuario usuario = usuarioMapper.toEntity(request);

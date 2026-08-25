@@ -7,6 +7,7 @@ import dev.fercho.inventstore.dto.response.CompraResponse;
 import dev.fercho.inventstore.mapper.CompraMapper;
 import dev.fercho.inventstore.service.CompraService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +16,8 @@ import java.util.List;
 @RequestMapping("/api/compras")
 public class CompraController {
 
-    private CompraService compraService;
-    private CompraMapper compraMapper;
+    private final CompraService compraService;
+    private final CompraMapper compraMapper;
 
     public CompraController(CompraService compraService, CompraMapper compraMapper) {
         this.compraService = compraService;
@@ -25,7 +26,8 @@ public class CompraController {
 
 
     @PostMapping
-    public CompraResponse crearCompra(@RequestBody CrearCompraRequest request){
+    @ResponseStatus(HttpStatus.CREATED)
+    public CompraResponse crearCompra(@RequestBody @Valid CrearCompraRequest request){
         return  compraMapper.toResponse(compraService.crearCompra(request));
     }
 
@@ -34,7 +36,7 @@ public class CompraController {
         return compraMapper.toList(compraService.obtenerCompras());
     }
 
-    @PostMapping("/{id}/agregar-detalle")
+    @PatchMapping("/{id}/agregar-detalle")
     public CompraResponse agregarDetalleCompra(@PathVariable Long id, @Valid @RequestBody AgregarDetalleCompraRequest req){
         return compraMapper.toResponse(compraService.agregarDetalleCompra(id,req));
 

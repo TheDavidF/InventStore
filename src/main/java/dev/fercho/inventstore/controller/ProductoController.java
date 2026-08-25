@@ -4,11 +4,11 @@ package dev.fercho.inventstore.controller;
 import dev.fercho.inventstore.dto.request.ActualizarProductoRequest;
 import dev.fercho.inventstore.dto.request.CrearProductoRequest;
 import dev.fercho.inventstore.dto.response.ProductoResponse;
-import dev.fercho.inventstore.dto.response.UsuarioResponse;
 import dev.fercho.inventstore.mapper.ProductoMapper;
 import dev.fercho.inventstore.model.Producto;
 import dev.fercho.inventstore.service.ProductoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +17,8 @@ import java.util.List;
 @RequestMapping("/api/productos")
 public class ProductoController {
 
-    private ProductoService productoService;
-    private ProductoMapper productoMapper;
+    private final ProductoService productoService;
+    private final ProductoMapper productoMapper;
 
     public ProductoController(ProductoService productoService, ProductoMapper productoMapper) {
         this.productoService = productoService;
@@ -26,6 +26,7 @@ public class ProductoController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ProductoResponse crearProducto(@RequestBody @Valid CrearProductoRequest request){
         Producto producto = productoService.crearProducto(request);
         return productoMapper.toResponse(producto);

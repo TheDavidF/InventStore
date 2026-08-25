@@ -5,7 +5,8 @@ import dev.fercho.inventstore.dto.request.CrearProveedorRequest;
 import dev.fercho.inventstore.dto.response.ProveedorResponse;
 import dev.fercho.inventstore.mapper.ProveedorMapper;
 import dev.fercho.inventstore.service.ProveedorService;
-import lombok.Getter;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class ProveedorController {
 
 
     @PostMapping
-    public ProveedorResponse crearProveedor(@RequestBody CrearProveedorRequest request){
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProveedorResponse crearProveedor(@RequestBody @Valid CrearProveedorRequest request){
         return proveedorMapper.toResponse(proveedorService.crearProveedor(request));
     }
 

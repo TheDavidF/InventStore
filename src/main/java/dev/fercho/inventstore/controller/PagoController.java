@@ -7,6 +7,7 @@ import dev.fercho.inventstore.mapper.PagoMapper;
 import dev.fercho.inventstore.model.Pago;
 import dev.fercho.inventstore.service.PagoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ public class PagoController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PagoResponse registrarPago(@RequestBody @Valid CrearPagoRequest req){
         //quitar la logica del controller en un futuro
         Pago pago =pagoService.registrarPago(req);
