@@ -16,17 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.security.Key;
-import java.security.PublicKey;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.LongFunction;
 
 
 @Service
@@ -262,9 +257,8 @@ public class OrdenService {
         });
 
         String motivo = "Consumo por orden #" + orden.getId();
-        insumos.forEach((insumo, cantidadTotal) -> {
-            movimientoInventarioService.registrarSalidaVenta(insumo,cantidadTotal,motivo);
-        });
+        insumos.forEach((insumo, cantidadTotal) ->
+                movimientoInventarioService.registrarSalidaVenta(insumo,cantidadTotal,motivo));
 
 
     }
