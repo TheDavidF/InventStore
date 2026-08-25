@@ -220,7 +220,7 @@ public class OrdenService {
 
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() ->
-                        new ConflictoEstadoException( "Solo una orden en estado CREADA puede iniciar preparación")
+                        new RecursoNoEncontradoException( "Producto no encontrado")
                 );
 
         if (!producto.isActivo()) {
@@ -237,7 +237,7 @@ public class OrdenService {
 
         if (orden.getEstado() != EstadoOrden.CREADA && orden.getEstado() != EstadoOrden.PREPARANDO) {
             throw new ConflictoEstadoException(
-                    "Solo se pueden modificar órdenes en estado CREADA"
+                    "Solo se pueden modificar órdenes en estado CREADA o PEPARANDO"
             );
         }
     }

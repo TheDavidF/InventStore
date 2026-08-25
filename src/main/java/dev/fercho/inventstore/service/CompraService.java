@@ -3,6 +3,7 @@ package dev.fercho.inventstore.service;
 import dev.fercho.inventstore.dto.request.AgregarDetalleCompraRequest;
 import dev.fercho.inventstore.dto.request.CrearCompraRequest;
 import dev.fercho.inventstore.exception.ConflictoEstadoException;
+import dev.fercho.inventstore.exception.PeticionInvalidaException;
 import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
 import dev.fercho.inventstore.mapper.CompraMapper;
 import dev.fercho.inventstore.model.Compra;
@@ -91,7 +92,7 @@ public class CompraService {
     public Compra pagarCompra(Long id){
         Compra compra = obtenerPorId(id);
         if(compra.getDetallesCompra().isEmpty()){
-            throw new RuntimeException("La compra no tiene insumos registrados");
+            throw new PeticionInvalidaException("La compra no tiene insumos registrados");
         }
         if (compra.getEstado() != EstadoCompra.PENDIENTE_PAGO) {
             throw new ConflictoEstadoException("La compra ya fue pagada");
@@ -110,7 +111,7 @@ public class CompraService {
         for (DetalleCompra detalle:
                 compra.getDetallesCompra()) {
             if(detalle.getSubtotal() == null){
-                throw new RuntimeException("Todos los detalles deben tener subtotal");
+                throw new PeticionInvalidaException("Todos los detalles deben tener subtotal");
             }
             total = total.add(detalle.getSubtotal());
         }
