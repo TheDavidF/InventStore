@@ -1,85 +1,125 @@
 import {useState} from "react";
 
-
-
 function App() {
-    const [productos, setProductos] = useState([
-        { id: 1, nombre: "Hamburguesa", precio: 25 },
-        { id: 2, nombre: "Papas", precio: 15 },
-        { id: 3, nombre: "CocaCola", precio: 6 }
-    ]);
 
-    const nuevoProducto ={
-        id:4,
-        nombre:"Hot Dog",
-        precio:20
+    const [correo, setCorreo] = useState("");
+    const [password, setPassword] = useState("");
+    const [productos, setProductos] = useState<ProductoResponse[]>([]);
+
+    const cambiarPassword =(event) =>{
+        setPassword(event.target.value)
     };
 
-    setProductos((anteriores) =>[
-        ...anteriores,
-        nuevoProducto
-    ]);
+    const cambiarCorreo = (event) => {
+        setCorreo(event.target.value);
+    };
 
-    const eliminarProducto = (id: number) => {
-        setProductos((anteriores) =>
-            anteriores.filter((producto) => producto.id !== id)
-        );
+    const iniciarSesion = async (event) => {
+        event.preventDefault();
+
+        const respuesta = await fetch("http://localhost:8080/api/auth/login", {
+           method: "POST",
+            headers:{
+               "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                correo: correo,
+                contrasena: password
+            })
+        });
+
+        const datos:LoginResponse = await respuesta.json();
+        sessionStorage.setItem("token", datos.token);
+        sessionStorage.setItem("correo", datos.correo);
+        sessionStorage.setItem("rol", datos.rol);
+        console.log(datos);
+    };
+
+    const cargarProductos = async () => {
+        const token = sessionStorage.getItem("token");
+
+        if (token === null) {
+            console.log("No hay token");
+            return;
+        }
+
+        const respuesta = await fetch("http://localhost:8080/api/productos", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const datos: ProductoResponse[] = await respuesta.json();
+
+        setProductos(datos);
     };
 
     return (
-        <div>
+        <main>
             <h1>InventStore</h1>
-            {
-                productos.map(
-                    (producto) => {
-                        return  (
-                            <Producto
-                                key={producto.id}
-                                nombre={producto.nombre}
-                                precio={producto.precio}
-                            />
-                        );
-                    }
-                )
-            }
-        </div>
+
+            <form onSubmit={iniciarSesion}>
+                <div>
+                    <label>Correo</label>
+                    <input type="email"
+                           value={correo}
+                           onChange={cambiarCorreo} />
+                    <p>Correo actual: {correo}</p>
+                </div>
+
+                <div>
+                    <label>Contraseña</label>
+                    <input type="password"
+                            value={password}
+                            onChange={cambiarPassword}/>
+                </div>
+
+                <button type="submit">
+                    Iniciar sesión
+
+                </button>
+
+
+                <button type="button" onClick={cargarProductos}>
+                    Cargar productos
+                </button>
+            </form>
+            <section>
+                <h2>Productos</h2>
+
+                {productos.map((producto) => (
+                    <div key={producto.id}>
+                        <h3>{producto.nombre}</h3>
+                        <p>{producto.descripcion}</p>
+                        <p>Precio: Q{producto.precio}</p>
+                        <p>Categoría: {producto.categoriaNombre}</p>
+                        <p>Tipo: {producto.tipo}</p>
+                    </div>
+                ))}
+            </section>
+        </main>
     );
-}
-
-function Producto({nombre, precio}: ProductoProps){
-    const [cantidad, setCantidad] = useState(1);
-
-    const agregar = () => {
-        setCantidad((anterior) => anterior + 1);
-    };
-
-    const restar = () => {
-        setCantidad((anterior) => {
-            if (anterior > 0) {
-                return anterior - 1;
-            }
-
-            return anterior;
-        });
-    };
-
-  return(
-      <div>
-        <h2>{nombre}</h2>
-        <h2>precio:{precio}</h2>
-        <h2>cantidad:{cantidad}</h2>
-        <h2>Subtotal:{cantidad*precio}</h2>
-        <button onClick={restar}>-</button>
-        <button onClick={agregar}>+</button>
-      </div>
-  )
 
 
 }
 
+type ProductoResponse = {
+    id: number;
+    nombre: string;
+    descripcion: string;
+    precio: number;
+    tipo: string;
+    activo: boolean;
+    categoriaId: number;
+    categoriaNombre: string;
+};
 
-type ProductoProps = {
-  nombre: string
-  precio: number
-}
+type LoginResponse = {
+    token: string;
+    tipo: string;
+    expiraEn: number;
+    correo: string;
+    rol: string;
+};
+
 export default App
