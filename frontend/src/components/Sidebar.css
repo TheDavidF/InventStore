@@ -1,0 +1,30 @@
+.sidebar{
+    width: 240px;
+    padding: 24px 16px;
+    background-color: #111827;
+    color: white;
+
+}
+
+.sidebar-menu{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-link {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #d1d5db;
+    text-decoration: none;
+}
+
+.nav-link.active {
+    background-color: #4f46e5;
+    color: white;
+}
