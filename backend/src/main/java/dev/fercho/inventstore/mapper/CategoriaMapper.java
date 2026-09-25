@@ -5,7 +5,7 @@ import dev.fercho.inventstore.dto.request.CrearUsuarioRequest;
 import dev.fercho.inventstore.dto.response.CategoriaResponse;
 import dev.fercho.inventstore.model.Categoria;
 import org.springframework.stereotype.Component;
-
+import java.util.List;
 
 @Component
 public class CategoriaMapper {
@@ -24,5 +24,12 @@ public class CategoriaMapper {
         categoriaResponse.setActiva(categoria.isActiva());
         categoriaResponse.setNombre(categoria.getNombre());
         return categoriaResponse;
+    }
+
+    public List<CategoriaResponse> toList(List<Categoria> categorias){
+        return categorias
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 }

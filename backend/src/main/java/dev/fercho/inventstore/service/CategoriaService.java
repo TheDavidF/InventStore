@@ -4,7 +4,7 @@ import dev.fercho.inventstore.dto.request.CrearCategoriaRequest;
 import dev.fercho.inventstore.model.Categoria;
 import dev.fercho.inventstore.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 
 @Service
 public class CategoriaService {
@@ -19,5 +19,9 @@ public class CategoriaService {
         Categoria categoria = new Categoria();
         categoria.setNombre(request.getNombre());
         return categoriaRepository.save(categoria);
+    }
+
+    public List<Categoria> obtenerCategorias(){
+        return categoriaRepository.findAll();
     }
 }

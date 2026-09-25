@@ -9,6 +9,7 @@ import dev.fercho.inventstore.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/categorias")
@@ -20,6 +21,12 @@ public class CategoriaController {
     public CategoriaController(CategoriaService categoriaService, CategoriaMapper categoriaMapper){
         this.categoriaService = categoriaService;
         this.categoriaMapper = categoriaMapper;
+    }
+
+
+    @GetMapping
+    public List<CategoriaResponse> obtenerCategorias(){
+        return categoriaMapper.toList(categoriaService.obtenerCategorias());
     }
 
 

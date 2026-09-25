@@ -38,7 +38,7 @@ public class ProductoService {
 
 
     public List<Producto> obtenerProductos(){
-        return productoRepository.findAllByActivoTrue();
+        return productoRepository.findAll();
     }
 
     public Producto actualizarProducto(Long id, ActualizarProductoRequest request){
