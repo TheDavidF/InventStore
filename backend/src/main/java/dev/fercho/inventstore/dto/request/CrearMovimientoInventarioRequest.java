@@ -1,7 +1,6 @@
 package dev.fercho.inventstore.dto.request;
 
 
-import dev.fercho.inventstore.model.enums.TipoMovimientoInventario;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;

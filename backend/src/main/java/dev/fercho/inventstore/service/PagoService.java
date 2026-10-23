@@ -2,7 +2,6 @@ package dev.fercho.inventstore.service;
 
 
 import dev.fercho.inventstore.dto.request.CrearPagoRequest;
-import dev.fercho.inventstore.dto.response.PagoResponse;
 import dev.fercho.inventstore.exception.ConflictoEstadoException;
 import dev.fercho.inventstore.exception.PeticionInvalidaException;
 import dev.fercho.inventstore.model.Caja;

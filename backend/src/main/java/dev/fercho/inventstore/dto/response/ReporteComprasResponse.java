@@ -1,8 +1,6 @@
 package dev.fercho.inventstore.dto.response;
 
-import dev.fercho.inventstore.model.enums.EstadoCaja;
 import dev.fercho.inventstore.model.enums.EstadoCompra;
-import dev.fercho.inventstore.model.enums.EstadoOrden;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

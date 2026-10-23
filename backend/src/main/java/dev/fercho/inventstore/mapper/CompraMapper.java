@@ -1,13 +1,10 @@
 package dev.fercho.inventstore.mapper;
 
 
-import dev.fercho.inventstore.dto.request.AgregarDetalleCompraRequest;
 import dev.fercho.inventstore.dto.response.CompraResponse;
 import dev.fercho.inventstore.dto.response.DetalleCompraResponse;
 import dev.fercho.inventstore.model.Compra;
 import dev.fercho.inventstore.model.DetalleCompra;
-import dev.fercho.inventstore.model.Insumo;
-import dev.fercho.inventstore.repository.InsumoRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

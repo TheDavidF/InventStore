@@ -2,7 +2,6 @@ package dev.fercho.inventstore.mapper;
 
 import dev.fercho.inventstore.dto.response.ReporteComprasResponse;
 import dev.fercho.inventstore.model.Compra;
-import jakarta.persistence.Column;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

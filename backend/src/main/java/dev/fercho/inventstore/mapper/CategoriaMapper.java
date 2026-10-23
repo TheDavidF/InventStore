@@ -1,7 +1,6 @@
 package dev.fercho.inventstore.mapper;
 
 import dev.fercho.inventstore.dto.request.CrearCategoriaRequest;
-import dev.fercho.inventstore.dto.request.CrearUsuarioRequest;
 import dev.fercho.inventstore.dto.response.CategoriaResponse;
 import dev.fercho.inventstore.model.Categoria;
 import org.springframework.stereotype.Component;

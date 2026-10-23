@@ -3,10 +3,8 @@ package dev.fercho.inventstore.repository;
 import dev.fercho.inventstore.model.Orden;
 import dev.fercho.inventstore.model.Usuario;
 import dev.fercho.inventstore.model.enums.EstadoOrden;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

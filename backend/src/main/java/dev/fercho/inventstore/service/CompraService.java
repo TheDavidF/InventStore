@@ -5,14 +5,12 @@ import dev.fercho.inventstore.dto.request.CrearCompraRequest;
 import dev.fercho.inventstore.exception.ConflictoEstadoException;
 import dev.fercho.inventstore.exception.PeticionInvalidaException;
 import dev.fercho.inventstore.exception.RecursoNoEncontradoException;
-import dev.fercho.inventstore.mapper.CompraMapper;
 import dev.fercho.inventstore.model.Compra;
 import dev.fercho.inventstore.model.DetalleCompra;
 import dev.fercho.inventstore.model.Insumo;
 import dev.fercho.inventstore.model.Proveedor;
 import dev.fercho.inventstore.model.enums.EstadoCompra;
 import dev.fercho.inventstore.repository.CompraRepository;
-import dev.fercho.inventstore.repository.DetalleCompraRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

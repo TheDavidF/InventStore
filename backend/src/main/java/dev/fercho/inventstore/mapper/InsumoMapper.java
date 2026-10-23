@@ -2,7 +2,6 @@ package dev.fercho.inventstore.mapper;
 
 import dev.fercho.inventstore.dto.response.InsumoResponse;
 import dev.fercho.inventstore.model.Insumo;
-import dev.fercho.inventstore.service.InsumoService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

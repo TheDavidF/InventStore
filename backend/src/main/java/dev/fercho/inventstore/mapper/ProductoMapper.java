@@ -3,11 +3,9 @@ package dev.fercho.inventstore.mapper;
 
 import dev.fercho.inventstore.dto.request.CrearProductoRequest;
 import dev.fercho.inventstore.dto.response.ProductoResponse;
-import dev.fercho.inventstore.model.Categoria;
 import dev.fercho.inventstore.model.Producto;
 import org.springframework.stereotype.Component;
 
-import java.security.PublicKey;
 import java.util.List;
 
 @Component

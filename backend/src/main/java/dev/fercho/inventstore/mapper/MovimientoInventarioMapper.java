@@ -6,7 +6,6 @@ import dev.fercho.inventstore.dto.response.MovimientoInventarioResponse;
 import dev.fercho.inventstore.model.MovimientoInventario;
 import org.springframework.stereotype.Component;
 
-import java.security.PublicKey;
 import java.util.List;
 
 @Component

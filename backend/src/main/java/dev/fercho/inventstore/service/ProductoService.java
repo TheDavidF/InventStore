@@ -8,7 +8,6 @@ import dev.fercho.inventstore.model.Categoria;
 import dev.fercho.inventstore.model.Producto;
 import dev.fercho.inventstore.repository.CategoriaRepository;
 import dev.fercho.inventstore.repository.ProductoRepository;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

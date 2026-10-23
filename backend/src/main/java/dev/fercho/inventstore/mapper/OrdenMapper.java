@@ -5,9 +5,6 @@ import dev.fercho.inventstore.dto.response.DetalleOrdenResponse;
 import dev.fercho.inventstore.dto.response.OrdenResponse;
 import dev.fercho.inventstore.model.DetalleOrden;
 import dev.fercho.inventstore.model.Orden;
-import dev.fercho.inventstore.repository.DetalleOrdenRepository;
-import org.hibernate.sql.model.ast.builder.CollectionRowDeleteByUpdateSetNullBuilder;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
