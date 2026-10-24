@@ -1,4 +1,5 @@
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Sidebar.css";
 
 
@@ -10,9 +11,17 @@ function Sidebar() {
 
             <nav>
                 <ul className="sidebar-menu">
-                    <li href="#">Dashboard</li>
-                    <li href="#">Órdenes</li>
-                    <li href="#">Caja</li>
+                    <li>
+                        <Link to="/dashboard">Dashboard</Link>
+                    </li>
+
+                    <li>
+                        <Link to="/ordenes">Órdenes</Link>
+                    </li>
+
+                    <li>
+                        <Link to="/caja">Caja</Link>
+                    </li>
                     <li>
                         <NavLink
                             to="/productos"
@@ -23,11 +32,24 @@ function Sidebar() {
                             Productos
                         </NavLink>
                     </li>
-                    <li href="#">Inventario</li>
-                    <li href="#">Compras</li>
-                    <li href="#">Proveedores</li>
-                    <li href="#">Reportes</li>
-                    <li href="#">Usuarios</li>
+
+                    <li>
+                        <Link to="/inventario" >Inventario</Link>
+                    </li>
+                    <li>
+                        <Link to="/Compras" >Compras</Link>
+                    </li>
+                    <li>
+                        <Link to="/Proveedores" >Proveedores</Link>
+                    </li>
+                    <li>
+                        <Link to="/Reportes" >Reportes</Link>
+                    </li>
+                    <li>
+                        <Link to="/Usuarios" >Usuarios</Link>
+                    </li>
+
+
                 </ul>
             </nav>
         </aside>
