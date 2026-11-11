@@ -44,29 +44,34 @@ function ProductosTable({
                                 {producto.activo ? "Activo" : "Inactivo"}
                             </td>
 
-                            <td>
-                                <button
-                                    type="button"
-                                    onClick={() => onEditar(producto)}
-                                >
-                                    Editar
-                                </button>
+                            <td className="p-2">
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        className="h-8 rounded-lg border bg-[#22ce5b] px-3 text-sm text-white transition-colors hover:bg-[#1eb952]"
+                                        type="button"
+                                        onClick={() => onEditar(producto)}
+                                    >
+                                        Editar
+                                    </button>
 
-                                {producto.activo ? (
-                                    <button
-                                        type="button"
-                                        onClick={() => onDesactivar(producto)}
-                                    >
-                                        Desactivar
-                                    </button>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        onClick={() => onActivar(producto)}
-                                    >
-                                        Activar
-                                    </button>
-                                )}
+                                    {producto.activo ? (
+                                        <button
+                                            className="h-8 rounded-lg border bg-[#0f7dfa] px-3 text-sm text-white transition-colors hover:bg-[#0c6cd8]"
+                                            type="button"
+                                            onClick={() => onDesactivar(producto)}
+                                        >
+                                            Desactivar
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="h-8 rounded-lg border bg-[#0f7dfa] px-3 text-sm text-white transition-colors hover:bg-[#0c6cd8]"
+                                            type="button"
+                                            onClick={() => onActivar(producto)}
+                                        >
+                                            Activar
+                                        </button>
+                                    )}
+                                </div>
                             </td>
                         </tr>
                     ))}

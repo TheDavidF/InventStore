@@ -308,8 +308,8 @@ function ProductosPage() {
                 />
             </div>
 
-            <div className="button-modal">
-                <button type="button" onClick={abrirCreacion}>
+            <div className="mb-3 button-modal">
+                <button className="px-2 py-2 text-white bg-[#111827]  rounded-2xl shadow shadow-gray-900 hover:bg-[#4f46e5]" type="button" onClick={abrirCreacion}>
                     Nuevo producto
                 </button>
             </div>

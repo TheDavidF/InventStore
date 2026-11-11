@@ -5,33 +5,27 @@ import LoginPage from "./pages/LoginPage";
 import ProductosPage from "./pages/ProductosPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./components/AppLayout";
+import CategoriasPage from "./pages/CategotriasPage";
 
 function App() {
-    return (
-        <BrowserRouter>
-            <Routes>
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
 
-                <Route
-                    path="/login"
-                    element={<LoginPage />}
-                />
-
-                <Route
-                    element={
-                        <ProtectedRoute>
-                            <AppLayout />
-                        </ProtectedRoute>
-                    }
-                >
-                    <Route
-                        path="/productos"
-                        element={<ProductosPage />}
-                    />
-                </Route>
-
-            </Routes>
-        </BrowserRouter>
-    );
+        <Route
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/categorias" element={<CategoriasPage />} />
+          <Route path="/productos" element={<ProductosPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
