@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import "./ProductosPage.css";
+import PageHeader from "../components/ui/PageHeader";
+import Modal from "../components/ui/Modal";
 import ProductosTable from "../components/productos/ProductosTable";
 import ProductoFormComponent from "../components/productos/ProductoForm";
 import { productosService } from "../services/productoService";
@@ -212,8 +213,6 @@ function ProductosPage() {
         try {
             const datos = await productosService.obtenerTodos();
 
-            console.log("Productos recibidos:", datos);
-            console.log("¿Es un arreglo?", Array.isArray(datos));
             setProductos(datos);
         } catch (error) {
             manejarError(error);
@@ -294,62 +293,22 @@ function ProductosPage() {
     }, []);
 
     return (
-        <section className="productos-page">
-            <h1>Productos</h1>
-
-            <div className="busqueda-input">
-                <label htmlFor="buscar-producto">Buscar Producto</label>
-                <input
-                    id="buscar-producto"
-                    type="text"
-                    placeholder="Buscar por nombre..."
-                    value={textoBusqueda}
-                    onChange={buscarProducto}
-                />
+        <section>
+            <PageHeader titulo="Productos" descripcion="Gestiona el menú y los productos de Sazón Hogareño." accion={
+                <button type="button" onClick={abrirCreacion} className="rounded-lg bg-brand-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-primary-dark">+ Nuevo producto</button>
+            }/>
+            <div className="mb-5 rounded-xl border border-brand-border bg-brand-surface p-4 shadow-sm">
+                <label htmlFor="buscar-producto" className="mb-2 block text-sm font-semibold text-brand-ink">Buscar productos</label>
+                <input id="buscar-producto" type="search" className="w-full rounded-lg border border-brand-border bg-white px-4 py-2.5 text-sm text-brand-ink outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15 sm:max-w-sm" placeholder="Buscar por nombre..." value={textoBusqueda} onChange={buscarProducto}/>
             </div>
-
-            <div className="button-modal">
-                <button type="button" onClick={abrirCreacion}>
-                    Nuevo producto
-                </button>
-            </div>
-
+            {!modalAbierto && errorFormulario && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{errorFormulario}</p>}
+            <ProductosTable productos={productosFiltrados} onEditar={abrirEdicion} onDesactivar={desactivaProducto} onActivar={activarProducto}/>
             {modalAbierto && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <h2>
-                            {productoEditando === null ? "Nuevo Producto" : "Editar Producto"}
-                        </h2>
-
-                        <ProductoFormComponent
-                            producto={nuevoProducto}
-                            categorias={categorias}
-                            productoEditando={productoEditando}
-                            cargando={cargando}
-                            error={errorFormulario}
-                            onChange={setNuevoProducto}
-                            onSubmit={
-                                productoEditando === null
-                                    ? crearProducto
-                                    : actualizarProducto
-                            }
-                            onCancelar={() => {
-                                setModalAbierto(false);
-                                setProductoEditando(null);
-                            }}
-                        />
-                    </div>
-                </div>
+                <Modal titulo={productoEditando===null?"Nuevo producto":"Editar producto"} descripcion="Completa los datos del producto." onCerrar={()=>{if(!cargando){setModalAbierto(false);setProductoEditando(null);}}}>
+                    <ProductoFormComponent producto={nuevoProducto} categorias={categorias} productoEditando={productoEditando} cargando={cargando} error={errorFormulario} onChange={setNuevoProducto} onSubmit={productoEditando===null?crearProducto:actualizarProducto} onCancelar={()=>{setModalAbierto(false);setProductoEditando(null);}}/>
+                </Modal>
             )}
-
-            <ProductosTable
-                productos={productosFiltrados}
-                onEditar={abrirEdicion}
-                onDesactivar={desactivaProducto}
-                onActivar={activarProducto}
-            />
         </section>
     );
 }
-
 export default ProductosPage;
